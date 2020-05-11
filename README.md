@@ -1,3 +1,4 @@
+![CI](https://github.com/L0615T1C5-216AC-9437/admin-tools/workflows/CI/badge.svg)
 ### Description
 A lot of admin tools[.](https://youtu.be/dQw4w9WgXcQ)    
 
