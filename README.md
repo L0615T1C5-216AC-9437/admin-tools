@@ -1,9 +1,10 @@
+![CI](https://github.com/L0615T1C5-216AC-9437/admin-tools/workflows/CI/badge.svg)
 ### Description
 A lot of admin tools[.](https://youtu.be/dQw4w9WgXcQ)    
 
 ### Downloading a Jar
-1) go to [releases](https://github.com/L0615T1C5-216AC-9437/admin-tools-cn/releases) and download latest version, (not recommended to use pre-releases)
-2) follow [#Installing](https://github.com/L0615T1C5-216AC-9437/admin-tools-cn/blob/master/README.md#installing)
+1) go to [releases](https://github.com/L0615T1C5-216AC-9437/admin-tools/releases) and download latest version, (not recommended to use pre-releases)
+2) follow [#Installing](https://github.com/L0615T1C5-216AC-9437/admin-tools/blob/master/README.md#installing)
 
 ### Building a Jar
 
