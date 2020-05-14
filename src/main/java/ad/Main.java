@@ -40,7 +40,7 @@ public class Main extends Plugin {
             GOW.clear();
         });
         Events.on(EventType.PlayerJoin.class, event -> {
-            idTempDatabase.put(player.id, player);
+            idTempDatabase.put(player.id, event.player);
             pjl.add("[lime][[+][] [#"+event.player.color+"]"+event.player.name+"\n[white]UUID: "+event.player.uuid+"\nID: "+event.player.id);
         });
         Events.on(EventType.PlayerLeave.class, event -> {
