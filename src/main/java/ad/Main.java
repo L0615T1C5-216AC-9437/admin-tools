@@ -61,7 +61,6 @@ public class Main extends Plugin {
         Events.on(EventType.CommandIssueEvent.class, event -> {
             if(!event.command.equals(commandLock)){//if the command is different
                 if(commandLock != null){ //and we are locking it
-                    Call.sendMessage("sending");
                     ObjectSet.ObjectSetIterator var5 = Vars.indexer.getAllied(event.tile.getTeam(), BlockFlag.comandCenter).iterator();
 
                     while(var5.hasNext()) {
