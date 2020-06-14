@@ -1,13 +1,17 @@
 package ad;
 
 import arc.Events;
+import arc.struct.ObjectSet;
 import arc.util.CommandHandler;
 import arc.util.Log;
 import arc.util.Strings;
 import arc.util.Time;
 import arc.struct.Array;
+import mindustry.Vars;
 import mindustry.content.Items;
 import mindustry.core.NetClient;
+import mindustry.entities.Effects;
+import mindustry.entities.Units;
 import mindustry.entities.type.Player;
 import mindustry.game.EventType;
 import mindustry.game.Team;
@@ -15,7 +19,11 @@ import mindustry.game.Teams;
 import mindustry.gen.Call;
 import mindustry.net.Administration;
 import mindustry.plugin.Plugin;
+import mindustry.world.Tile;
 import mindustry.world.blocks.storage.CoreBlock;
+import mindustry.entities.units.UnitCommand;
+import mindustry.world.blocks.units.CommandCenter;
+import mindustry.world.meta.BlockFlag;
 
 import java.util.HashMap;
 import java.util.Random;
@@ -31,6 +39,7 @@ public class Main extends Plugin {
     public static long milisecondSinceBan = Time.millis();
     public static Array<String> pjl = new Array<>();
     public static boolean chat = true;
+    public static UnitCommand commandLock;
 
     ///Var
     //on start
@@ -48,6 +57,27 @@ public class Main extends Plugin {
         });
         Events.on(EventType.ServerLoadEvent.class, event -> {
             netServer.admins.addChatFilter((player, text) -> null);
+        });
+        Events.on(EventType.CommandIssueEvent.class, event -> {
+            if(!event.command.equals(commandLock)){//if the command is different
+                if(commandLock != null){ //and we are locking it
+                    Call.sendMessage("sending");
+                    ObjectSet.ObjectSetIterator var5 = Vars.indexer.getAllied(event.tile.getTeam(), BlockFlag.comandCenter).iterator();
+
+                    while(var5.hasNext()) {
+                        Tile center = (Tile)var5.next();
+                        if (center.block() instanceof CommandCenter) {
+                            CommandCenter.CommandCenterEntity entity = (CommandCenter.CommandCenterEntity)center.ent();
+                            entity.command = commandLock;
+                        }
+                    }
+
+                    Units.each(event.tile.getTeam(), (u) -> {
+                        u.onCommand(commandLock);
+                    });
+                    Events.fire(new EventType.CommandIssueEvent(event.tile, commandLock));
+                }
+            }
         });
     }
 
@@ -454,6 +484,7 @@ public class Main extends Plugin {
                             "\nban              - Bans a player, #ID/UUID - reason" +
                             "\npjl              - List of last 50 player joins and leaves." +
                             "\nkill             - Kills player, #ID" +
+                            "\ncl               - Locks the command center" +
                             "\ninfo             - Shows all commands and brief description, uuid");
                     break;
 
@@ -485,6 +516,27 @@ public class Main extends Plugin {
                     mus.start();
                     Call.sendMessage("Blame " + player.name);
                     break;
+                case "cl": //locks the command center
+                    switch(arg[1]) {
+                        case "attack":
+                            commandLock=UnitCommand.attack;
+                            break;
+                        case "retreat":
+                            commandLock=UnitCommand.retreat;
+                            break;
+                        case "rally":
+                            commandLock=UnitCommand.rally;
+                            break;
+                        case "none":
+                            commandLock=null;
+                            break;
+                        default:
+                            player.sendMessage("\"[salmon]cl[]: Locks the command center.\\nexample: /a cl attack\"");
+                            break;
+
+                    }
+                    break;
+
                 //if none of the above commands used.
                 default:
                     player.sendMessage(arg[0] + " Is not a command. Do `/a info` to see all available commands");
